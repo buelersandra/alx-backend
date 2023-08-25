@@ -3,6 +3,7 @@ package com.alx.infoms.controller;
 import com.alx.infoms.common.ApiPaths;
 import com.alx.infoms.dto.JokeDTO;
 import com.alx.infoms.dto.anime.AnimeDTO;
+import com.alx.infoms.dto.anime.AnimeWrapper;
 import com.alx.infoms.service.ProxyService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ProxyController {
 
     @Operation(summary = "Get Anime")
     @GetMapping(value =  "/anime")
-    public AnimeDTO getAnime()  {
+    public AnimeWrapper getAnime()  {
         return proxyService.fetchAnime();
     }
 }

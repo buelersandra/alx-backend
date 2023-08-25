@@ -28,9 +28,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<BaseResponseDTO<SignUpDTO>> register(SignUpDTO signUpDTO) {
-
-
-        userRepository.save(new User(signUpDTO.getEmailAddress(), passwordEncoder.encode(signUpDTO.getPassword())));
+        userRepository.save(new User(signUpDTO.getEmailAddress(),
+                passwordEncoder.encode(signUpDTO.getPassword())));
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 

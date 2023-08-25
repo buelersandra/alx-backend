@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import javax.security.sasl.AuthenticationException;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /** The Class ExceptionHelper. */
 @ControllerAdvice
@@ -38,15 +38,14 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
     @ExceptionHandler (value = { UserNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleUserNotFoundException(
-            InvalidFormatException ex) {
+            UserNotFoundException ex) {
         return new ResponseEntity<>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler (value = { AuthenticationException.class})
+    @ExceptionHandler (value = {  IOException.class, ServletException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected ResponseEntity<Object> handleAuthenticationException(
-            InvalidFormatException ex) {
-        return new ResponseEntity<>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    protected ResponseEntity<Object> handleAuthenticationException() {
+        return new ResponseEntity<>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,"Invalid token"), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler (value = { InvalidFormatException.class})
@@ -63,6 +62,8 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
         LOGGERLOGS.error("Exception", ex);
         return new ResponseEntity<Object>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+
 
 
     @Override

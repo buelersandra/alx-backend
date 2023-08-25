@@ -3,6 +3,7 @@ package com.alx.infoms.service;
 import com.alx.infoms.dto.BaseResponseDTO;
 import com.alx.infoms.dto.JokeDTO;
 import com.alx.infoms.dto.anime.AnimeDTO;
+import com.alx.infoms.dto.anime.AnimeWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,15 +30,15 @@ public class ProxyServiceImpl implements ProxyService {
     }
 
     @Override
-    public AnimeDTO fetchAnime() {
+    public AnimeWrapper fetchAnime() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/vnd.api+json");
         headers.set("Content-Type", "application/vnd.api+json");
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<AnimeDTO> response = restTemplate.exchange(
+        ResponseEntity<AnimeWrapper> response = restTemplate.exchange(
                 urlAnime,
                 HttpMethod.GET,
-                requestEntity, AnimeDTO.class);
+                requestEntity, AnimeWrapper.class);
         return response.getBody();
     }
 }
