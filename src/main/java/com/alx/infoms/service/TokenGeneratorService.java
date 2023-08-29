@@ -5,4 +5,6 @@ import com.alx.infoms.entity.User;
 
 public interface TokenGeneratorService {
     JWTTokenDTO generateToken(User user);
+
+    User validateToken(String token);
 }

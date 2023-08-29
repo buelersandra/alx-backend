@@ -3,6 +3,8 @@ package com.alx.infoms.service;
 import com.alx.infoms.common.ApiPaths;
 import com.alx.infoms.dto.JWTTokenDTO;
 import com.alx.infoms.entity.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,5 +32,22 @@ public class TokenGeneratorServiceImpl implements TokenGeneratorService {
 
 
         return new JWTTokenDTO(token, ApiPaths.SUCCESS_MSG);
+    }
+
+
+    public User validateToken(String token) {
+        try {
+            Claims body = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            User u = new User();
+            u.setEmailAddress(body.getSubject());
+            return u;
+
+        } catch (JwtException | ClassCastException e) {
+            return null;
+        }
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -35,14 +37,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<BaseResponseDTO<JWTTokenDTO>> login(LoginDTO loginDTO) throws UserNotFoundException {
-        User user = userRepository.findByEmailAddress(loginDTO.getEmailAddress());
+        Optional<User> user = userRepository.findByEmailAddress(loginDTO.getEmailAddress());
         if(user == null){
             throw new UserNotFoundException("Invalid id or password");
-        }if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())){
+        }if(!passwordEncoder.matches(loginDTO.getPassword(), user.get().getPassword())){
             throw new UserNotFoundException("Invalid id or password");
         }
 
-        return new ResponseEntity<>(new BaseResponseDTO<JWTTokenDTO>(null,tokenGeneratorService.generateToken(user)),
+        return new ResponseEntity<>(new BaseResponseDTO<JWTTokenDTO>(null,
+                tokenGeneratorService.generateToken(user.get())),
                 null, HttpStatus.OK);
 
     }
