@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -17,6 +18,8 @@ import javax.validation.Valid;
 @Tag(name = "Mini Information Management System")
 @RestController
 @RequestMapping(ApiPaths.VERSION)
+@CrossOrigin("*")
+@Validated
 public class UserController {
 
     @Inject
@@ -24,13 +27,13 @@ public class UserController {
 
     @Operation(summary = "Register a user")
     @PostMapping(value =  "/register")
-    public ResponseEntity<BaseResponseDTO<SignUpDTO>> register(@RequestBody @Valid SignUpDTO signUpDTO, Errors errors, HttpServletRequest request) {
+    public ResponseEntity<BaseResponseDTO<SignUpDTO>> register(@RequestBody @Valid SignUpDTO signUpDTO) {
         return userService.register(signUpDTO);
     }
 
     @Operation(summary = "Login a user")
     @PostMapping(value =  "/login")
-    public ResponseEntity<BaseResponseDTO<JWTTokenDTO>> login(@RequestBody @Valid LoginDTO loginDTO, Errors errors, HttpServletRequest request) throws UserNotFoundException {
+    public ResponseEntity<BaseResponseDTO<JWTTokenDTO>> login(@RequestBody @Valid LoginDTO loginDTO) throws UserNotFoundException {
         return userService.login(loginDTO);
     }
 

@@ -18,22 +18,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import javax.servlet.ServletException;
 import java.io.IOException;
 
 /** The Class ExceptionHelper. */
 @ControllerAdvice
-public class ExceptionHelper extends ResponseEntityExceptionHandler {
+public class InfoExceptionHelper  extends ResponseEntityExceptionHandler {
     /** The Constant LOGGER. */
-    private static final Logger LOGGERLOGS = LoggerFactory.getLogger(ExceptionHelper.class);
+    private static final Logger LOGGERLOGS = LoggerFactory.getLogger(InfoExceptionHelper.class);
 
-    @ExceptionHandler (value = {ConstraintViolationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ResponseEntity<Object> handleConstraintViolationException(
-            ConstraintViolationException ex) {
-        LOGGERLOGS.error("ConstraintViolationException", ex);
-        return new ResponseEntity<>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,ex.getSQLException().getMessage()), HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler (value = { UserNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -42,11 +36,6 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler (value = {  IOException.class, ServletException.class})
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected ResponseEntity<Object> handleAuthenticationException() {
-        return new ResponseEntity<>(new BaseResponseDTO<Object>(ApiPaths.FAILED_MSG,"Invalid token"), HttpStatus.UNAUTHORIZED);
-    }
 
     @ExceptionHandler (value = { InvalidFormatException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)

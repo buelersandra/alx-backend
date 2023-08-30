@@ -30,6 +30,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<BaseResponseDTO<SignUpDTO>> register(SignUpDTO signUpDTO) {
+        if(!signUpDTO.getPassword().equals(signUpDTO.getConfirmPassword())){
+            return new ResponseEntity<>(new BaseResponseDTO<>(
+                    "Passwords do not match",
+                    signUpDTO),
+                    HttpStatus.BAD_REQUEST);
+        }
         userRepository.save(new User(signUpDTO.getEmailAddress(),
                 passwordEncoder.encode(signUpDTO.getPassword())));
         return new ResponseEntity<>(null, HttpStatus.CREATED);
@@ -38,7 +44,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<BaseResponseDTO<JWTTokenDTO>> login(LoginDTO loginDTO) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmailAddress(loginDTO.getEmailAddress());
-        if(user == null){
+        if(!user.isPresent()){
             throw new UserNotFoundException("Invalid id or password");
         }if(!passwordEncoder.matches(loginDTO.getPassword(), user.get().getPassword())){
             throw new UserNotFoundException("Invalid id or password");
